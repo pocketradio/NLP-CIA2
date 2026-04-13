@@ -11,7 +11,7 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-from metrics import mean_kendall_tau, sequence_accuracy, tournament_to_order
+from metrics import tournament_to_order
 
 
 # ── Pairwise Scorer ───────────────────────────────────────────────────────────
@@ -165,23 +165,6 @@ def run_decoding(train_docs, test_docs, fusion_module,
     pairwise_acc = float(scorer.score(X_test, y_test))
     print(f"  Pairwise Scoring Accuracy: {pairwise_acc:.4f}")
 
-    # Sequence-level metrics
-    pred_orders = []
-    true_orders = []
-    for emb in test_embs:
-        pred = predict_document_order(emb, scorer)
-        true = list(range(emb['n']))   # canonical: 0, 1, 2, 3, 4
-        pred_orders.append(pred)
-        true_orders.append(true)
-
-    seq_acc = sequence_accuracy(pred_orders, true_orders)
-    avg_tau = mean_kendall_tau(pred_orders, true_orders)
-
-    print(f"  Sequence Accuracy: {seq_acc:.4f}")
-    print(f"  Mean Kendall Tau:  {avg_tau:.4f}")
-
     return {
         'pairwise_accuracy': pairwise_acc,
-        'sequence_accuracy': seq_acc,
-        'kendall_tau':       avg_tau,
-    }, scorer
+    }, scorer, test_embs
