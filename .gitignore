@@ -20,6 +20,9 @@ build/
 # Claude
 .claude/
 
+# IDE
+.vscode/
+
 # OS
 .DS_Store
 Thumbs.db
